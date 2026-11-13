@@ -1,10 +1,11 @@
 #!/bin/bash
 
 #PROOF_DIR="proofs/r3unsat_300"        # Directory containing proof
-PROOF_DIR="../mallob/proofs/proof#1"
+#PROOF_DIR="../mallob/proofs/proof#1"
+PROOF_DIR="p2t"
 #WORKING_DIR="../mallob/proof_working"                 # Directory for PalRUP communication
 WORKING_DIR="trim_working"
-NUM_SOLVERS=12                      # Number of proof fragments
+NUM_SOLVERS=48                      # Number of proof fragments
 
 # Calculate comm_size = ceil(sqrt(NUM_SOLVERS))^2
 # Equivalent C++ code:  std::pow(std::ceil(std::sqrt((double) _setup.maxNumSolvers)), 2);

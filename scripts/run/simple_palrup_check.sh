@@ -8,11 +8,12 @@ CNF_PATH=formulas/r3unsat_300.cnf  # Original Formula
 #PROOF_DIR="benchmark_proofs/a70883771fd1c210d94a916d52510a3a-gm28sparrc.cnf"
 #PROOF_DIR="proofs/palrup/r3unsat_300"
 #PROOF_DIR="../mallob/proofs/proof#1"
+#PROOF_DIR="p2t"
 PROOF_DIR="trim"
 #PROOF_DIR="proofs/converted"
 #WORKING_DIR="../mallob/proof_working"                 # Directory for PalRUP communication
 WORKING_DIR="working"
-NUM_SOLVERS=12                      # Number of proof fragments
+NUM_SOLVERS=48                      # Number of proof fragments
 DRUP=0
 CONVERT=1
 
