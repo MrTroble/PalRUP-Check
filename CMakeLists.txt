@@ -82,8 +82,10 @@ add_library(clause_finder
 target_link_libraries(clause_finder m import_merger)
 
 add_library(local_trim
+            src/utils/palrup_utils.c
             src/trim/local_trim.cpp
             src/trim/backward_import_merger.cpp
+            src/trim/watchdog.cpp
             src/trim/backward_file_reader.c
             src/utils/palrup_utils.c
             src/vectors.c)

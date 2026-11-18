@@ -227,9 +227,8 @@ u64 back_file_reader_get_start_line_idx(struct back_file_reader* bfr) {
                 idx += offset;
                 save_point += offset;
                 if (idx < 0) {
-                    snprintf(palrup_utils_msgstr, MSG_LEN, "Could not find beginning of line");
-                    palrup_utils_log_err(palrup_utils_msgstr);
-                    abort();
+                    assert(back_file_reader_eof(bfr));
+                    return 0;   // actual beginning of file
                 }
             }
             if (data[idx--] != 0)
@@ -243,8 +242,15 @@ u64 back_file_reader_get_start_line_idx(struct back_file_reader* bfr) {
                 return save_point;
             continue;
         case TRUSTED_CHK_CLS_PRODUCE:
-            if (idx < 0)
-                return 0;
+            if (idx < 0) {
+                long offset = back_file_reader_fill(bfr);
+                idx += offset;
+                save_point += offset;
+                if (idx < 0) {
+                    assert(back_file_reader_eof(bfr));
+                    return 0;   // actual beginning of file
+                }
+            }
             if (data[idx--] == 0) // found beginning of line
                 return idx + 2;
             continue;

@@ -4,6 +4,7 @@
 #include <assert.h>
 
 #include "local_trim.hpp"
+#include "watchdog.hpp"
 
 #define MARK (-queue.size() - 1)
 
@@ -98,10 +99,13 @@ void ProofTrimmer::trim() {
         }
     };
 
+    // activate Watchdog
+    Watchdog herbert("Herbert");
+
     u64 id;
-    u64 line_count = 0;
     // trim local proof until done
     while (!back_file_reader_eof(proof_fragment) || !(proof_fragment->read_idx == 0)) {
+        herbert.poke();
         stats.read_lines++;
         u64 line_idx = back_file_reader_get_start_line_idx(proof_fragment);
         switch (back_file_reader_decode_char(proof_fragment, line_idx)) {

@@ -13,7 +13,7 @@ PROOF_DIR="trim"
 #PROOF_DIR="proofs/converted"
 #WORKING_DIR="../mallob/proof_working"                 # Directory for PalRUP communication
 WORKING_DIR="working"
-NUM_SOLVERS=48                      # Number of proof fragments
+NUM_SOLVERS=12                      # Number of proof fragments
 DRUP=0
 CONVERT=1
 
