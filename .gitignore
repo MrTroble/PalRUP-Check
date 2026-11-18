@@ -11,3 +11,4 @@ proofs/
 benchmark_*
 formulas
 *.csv
+*.gz

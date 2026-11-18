@@ -97,7 +97,20 @@ for instance in instances:
             data_per_job[job][WAITTIME_LOCAL_CHECK].append(max(pal_data[WAITTIME_LOCAL_CHECK]) if len(pal_data[WAITTIME_LOCAL_CHECK]) else 0)
             data_per_job[job][WAITTIME_REDISTRIBUTE].append(max(pal_data[WAITTIME_REDISTRIBUTE]) if len(pal_data[WAITTIME_REDISTRIBUTE]) else 0)
             data_per_job[job][WAITTIME_CONFIRM].append(max(pal_data[WAITTIME_CONFIRM]) if len(pal_data[WAITTIME_CONFIRM]) else 0)
-
+        else:
+            print('PALS MISSING for instance', instance)
+            data_per_job[job][RUNTIME_LOCAL_CHECK].append(0)
+            data_per_job[job][RUNTIME_REDISTRIBUTE].append(0)
+            data_per_job[job][RUNTIME_CONFIRM].append(0)
+                                
+            data_per_job[job][SIZE_PALRUP].append(0)
+            data_per_job[job][SIZE_PROXY].append(0)
+            data_per_job[job][SIZE_IMPORT].append(0)
+                                
+            data_per_job[job][WAITTIME_LOCAL_CHECK].append(0)
+            data_per_job[job][WAITTIME_REDISTRIBUTE].append(0)
+            data_per_job[job][WAITTIME_CONFIRM].append(0)
+            
 
 df_solving.to_csv(f"{logs_path}/qresults-solve.csv", index=False)
 for job in data_per_job:

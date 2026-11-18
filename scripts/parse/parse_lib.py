@@ -13,7 +13,7 @@ import pandas as pd
 import statistics as stat
 
 from concurrent.futures import ThreadPoolExecutor
-MAX_THREADS = 8
+MAX_THREADS = 12
 
 ## COLUMN NAMES
 INSTANCE_ID = 'instance_id'
@@ -80,7 +80,7 @@ def get_results(logs_path):
         if os.path.exists(f"{instance_path}/model"):
             res = re.search("s (SATISFIABLE|UNSATISFIABLE)",
                             open(f"{instance_path}/model").read())
-            data[RESULT].append(res[0][2:] if res else None)
+            data[RESULT].append(res[0][2:] if res else 'ERROR')
         else: 
             data[RESULT].append(None)
 
