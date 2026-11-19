@@ -5,6 +5,7 @@
 
 #include "local_trim.hpp"
 #include "watchdog.hpp"
+#include "timer.hpp"
 
 #define MARK (-queue.size() - 1)
 
@@ -59,7 +60,8 @@ ProofTrimmer::~ProofTrimmer() {
     std::rename((fragment_path + ".trim~").c_str(), (fragment_path + ".trim").c_str());
 
     back_file_reader_free(this->proof_fragment);
-    palrup_utils_log(string(stats).c_str());
+    palrup_utils_log(std::string(stats).c_str());
+    palrup_utils_log(std::string(WaitTimer::stats).c_str());
 }
 
 // data has to be big enough, i.e. at least 10 byte for 64-bit int
@@ -101,6 +103,9 @@ void ProofTrimmer::trim() {
 
     // activate Watchdog
     Watchdog herbert("Herbert");
+
+    // Time trimming procedure
+    TrimTimer trim_timer;
 
     u64 id;
     // trim local proof until done
@@ -176,10 +181,13 @@ void ProofTrimmer::trim() {
                 }
 
                 // Wait to see if clause was used
-                while (mark.value() > 0) {
-                    stats.polls_while_waiting++;
-                    std::ignore = queue.terminate(on_message);
-                    mark = marked_clauses.find(id);
+                if (mark.value() > 0) {
+                    WaitTimer wt;
+                    while (mark.value() > 0) {
+                        stats.polls_while_waiting++;
+                        std::ignore = queue.terminate(on_message);
+                        mark = marked_clauses.find(id);
+                    }
                 }
 
                 // Clause was imported by other pals but not used by any of them

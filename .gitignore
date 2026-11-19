@@ -12,5 +12,5 @@ proofs/
 formulas
 *.csv
 *.gz
-trim*/
+trim_*/
 p2t/
