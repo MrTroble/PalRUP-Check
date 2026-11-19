@@ -5,8 +5,6 @@ extern "C" {
     #include <stdio.h>
 }
 
-#include <iostream>
-
 BackImpMerger::BackImpMerger(vector<string> file_paths, u64 capacity) :
     bfrs(vector<struct back_file_reader*>(0)),
     Q(priority_queue<pair<u64,int>>()) {
@@ -21,12 +19,6 @@ BackImpMerger::BackImpMerger(vector<string> file_paths, u64 capacity) :
             }
         }
     }
-}
-
-BackImpMerger::~BackImpMerger() {
-    // TODO: fix mem leak
-    // for (auto bfr : bfrs)
-    //     back_file_reader_free(bfr);
 }
 
 pair<u64,int> BackImpMerger::next() {
@@ -51,4 +43,9 @@ pair<u64,int> BackImpMerger::next() {
     }
 
     return {id, count};
+}
+
+void BackImpMerger::free_Q() {
+    for (auto bfr : bfrs)
+        back_file_reader_free(bfr);
 }

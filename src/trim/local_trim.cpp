@@ -47,7 +47,7 @@ ProofTrimmer::ProofTrimmer(std::string proof_path, std::string working_path, u64
         data_pointer = proof_fragment->buffer->data;
 
         //auto someQ = BackImpMerger(calc_input_paths(), input_buffer_cap, queue.rank());
-        importQ = BackImpMerger(calc_input_paths(), input_buffer_cap);
+        importQ = std::move(BackImpMerger(calc_input_paths(), input_buffer_cap));
 
         mark_empty_clause(working_path + "/.unsat_found");
         write_buffer.reserve(write_buffer_size);
@@ -58,6 +58,7 @@ ProofTrimmer::~ProofTrimmer() {
     reverse_outfile();
     fclose(out_file);
     std::rename((fragment_path + ".trim~").c_str(), (fragment_path + ".trim").c_str());
+    importQ.free_Q();
 
     back_file_reader_free(this->proof_fragment);
     palrup_utils_log(std::string(stats).c_str());
@@ -102,7 +103,7 @@ void ProofTrimmer::trim() {
     };
 
     // activate Watchdog
-    Watchdog herbert("Herbert");
+    //Watchdog herbert("Herbert");
 
     // Time trimming procedure
     TrimTimer trim_timer;
@@ -110,7 +111,7 @@ void ProofTrimmer::trim() {
     u64 id;
     // trim local proof until done
     while (!back_file_reader_eof(proof_fragment) || !(proof_fragment->read_idx == 0)) {
-        herbert.poke();
+        //herbert.poke();
         stats.read_lines++;
         u64 line_idx = back_file_reader_get_start_line_idx(proof_fragment);
         switch (back_file_reader_decode_char(proof_fragment, line_idx)) {

@@ -215,6 +215,18 @@ u64 back_file_reader_get_start_line_idx(struct back_file_reader* bfr) {
     long save_point = idx;
     bool found_short_line = false;
     while (true) {
+        if (idx < 0) {
+            long offset = back_file_reader_fill(bfr);
+            idx += offset;
+            save_point += offset;
+            if (idx < 0) {
+                snprintf(palrup_utils_msgstr, MSG_LEN, "Could not find beginning of line");
+                palrup_utils_log_err(palrup_utils_msgstr);
+                abort();
+            }
+        }
+        assert(idx >= 0);
+        assert(idx < (long)bfr->buffer->size);
         switch (data[idx--]) {
         case 0:
             if (found_short_line)   // 0 marks hints in an 'a' line
@@ -255,16 +267,6 @@ u64 back_file_reader_get_start_line_idx(struct back_file_reader* bfr) {
                 return idx + 2;
             continue;
         default:
-            if (idx < 0) {
-                long offset = back_file_reader_fill(bfr);
-                idx += offset;
-                save_point += offset;
-                if (idx < 0) {
-                    snprintf(palrup_utils_msgstr, MSG_LEN, "Could not find beginning of line");
-                    palrup_utils_log_err(palrup_utils_msgstr);
-                    abort();
-                }
-            }
             continue;
         }
         break;
