@@ -61,10 +61,16 @@ def get_names(logs_path):
     for instance in instances:
         instance_path = f"{logs_path}/{instance}"
         data[INSTANCE_ID].append(instance)
+        name = ''
         if os.path.exists(f"{instance_path}/instance.txt"):
-            data[NAME].append(open(f"{instance_path}/instance.txt").readline().strip().split('/')[-1])
-        else:
-            data[NAME].append('')
+            name = open(f"{instance_path}/instance.txt").readline().strip().split('/')[-1]
+        if name == '':
+            if os.path.exists(f"{instance_path}/0/log.0"):
+                log = open(f"{instance_path}/0/log.0").read()
+                res = re.search(' -mono=(\S* )', log)
+                if res:
+                    name = res[0].strip().split('/')[-1]
+        data[NAME].append(name)
     return pd.DataFrame(data)
 
 def get_results(logs_path):

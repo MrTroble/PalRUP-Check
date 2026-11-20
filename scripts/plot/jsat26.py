@@ -42,7 +42,7 @@ dfs[16]['k']['D'] = pd.read_csv('qresults-16kD.csv')
 dfs[1]['p']['s'] = pd.read_csv('qresults-1ps.csv')
 dfs[1]['p']['b'] = pd.read_csv('qresults-1pb.csv')
 
-dfs[16]['p']['s'] = pd.read_csv('qresults-16pb.csv')
+dfs[16]['p']['s'] = pd.read_csv('qresults-16ps.csv')
 dfs[16]['p']['b'] = pd.read_csv('qresults-16pb.csv')
 
 
@@ -82,7 +82,7 @@ plots.plot_CDF(dfs=[dfs[16]['p']['s'], dfs[16]['k']['s'], dfs[1]['p']['s'], dfs[
                #colors=['black', 'tab:red', 'tab:orange', 'tab:orange', 'darkblue', 'tab:blue', 'tab:blue', 'black'],
                colors=['tab:red', 'tab:orange', 'darkblue', 'tab:blue'],
                xlim=300,
-               ylim=325,
+               ylim=400,
                figsize=[2.8, 3],
                square=False,
                show=SHOW,
