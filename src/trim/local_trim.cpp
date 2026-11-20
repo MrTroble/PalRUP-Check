@@ -103,7 +103,7 @@ void ProofTrimmer::trim() {
     };
 
     // activate Watchdog
-    //Watchdog herbert("Herbert");
+    Watchdog herbert("Herbert");
 
     // Time trimming procedure
     TrimTimer trim_timer;
@@ -111,8 +111,12 @@ void ProofTrimmer::trim() {
     u64 id;
     // trim local proof until done
     while (!back_file_reader_eof(proof_fragment) || !(proof_fragment->read_idx == 0)) {
-        //herbert.poke();
+        herbert.poke();
         stats.read_lines++;
+
+        // TODO: make some benchmarks for the setup. but aggressive message Movement definetly helps.
+        queue.flush_all_buffers();
+        //queue.poll(on_message);
         u64 line_idx = back_file_reader_get_start_line_idx(proof_fragment);
         switch (back_file_reader_decode_char(proof_fragment, line_idx)) {
             case TRUSTED_CHK_CLS_DELETE:
@@ -189,6 +193,7 @@ void ProofTrimmer::trim() {
                         std::ignore = queue.terminate(on_message);
                         mark = marked_clauses.find(id);
                     }
+                    if (mark.value() < 0) WaitTimer::stats.worthwhile_waits++;
                 }
 
                 // Clause was imported by other pals but not used by any of them

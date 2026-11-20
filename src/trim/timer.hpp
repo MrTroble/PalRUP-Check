@@ -21,6 +21,7 @@ class WaitTimer : Timer {
 public:
     static struct WaitStats {
         u64 wait_count = 0;
+        u64 worthwhile_waits = 0;
         std::chrono::nanoseconds wait_time_overall = std::chrono::nanoseconds(0);
         std::chrono::nanoseconds max_wait = std::chrono::nanoseconds(0);
         std::chrono::nanoseconds min_wait = std::chrono::nanoseconds(std::numeric_limits<int64_t>::max());
@@ -30,7 +31,8 @@ public:
                       "wait_count:" + std::to_string(wait_count) + " "
                     + "wait_time_overall:" + std::to_string(((std::chrono::duration<double>)wait_time_overall).count()) + " "
                     + "max_wait:" + std::to_string(((std::chrono::duration<double>)max_wait).count()) + " "
-                    + "min_wait:" + std::to_string(((std::chrono::duration<double>)min_wait).count());
+                    + "min_wait:" + std::to_string(((std::chrono::duration<double>)min_wait).count()) + " "
+                    + "worthwhile_waits:" + to_string(worthwhile_waits);
         }
     } stats;
 
