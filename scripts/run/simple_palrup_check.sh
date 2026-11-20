@@ -1,20 +1,26 @@
 #!/bin/bash
 
-CNF_PATH=formulas/r3unsat_300.cnf  # Original Formula
-#CNF_PATH="formulas/debug/944b4eaecefa1d15c2d2a8ac0c2d1c31-b14.cnf"
-#CNF_PATH="formulas/debug/a70883771fd1c210d94a916d52510a3a-gm28sparrc.cnf"
-#PROOF_DIR="buggy_proof"        # Directory containing proof
-#PROOF_DIR="error"
-#PROOF_DIR="benchmark_proofs/a70883771fd1c210d94a916d52510a3a-gm28sparrc.cnf"
-#PROOF_DIR="proofs/palrup/r3unsat_300"
-#PROOF_DIR="../mallob/proofs/proof#1"
-#PROOF_DIR="p2t"
-PROOF_DIR="trim_proof"
-#PROOF_DIR="proofs/converted"
-#WORKING_DIR="../mallob/proof_working"                 # Directory for PalRUP communication
+CNF_PATH=$1
+if [[ ! $CNF_PATH ]]; then
+    CNF_PATH=formulas/r3unsat_300.cnf  # Original Formula
+    #CNF_PATH="formulas/debug/944b4eaecefa1d15c2d2a8ac0c2d1c31-b14.cnf"
+    #CNF_PATH="formulas/debug/a70883771fd1c210d94a916d52510a3a-gm28sparrc.cnf"
+fi
+
+PROOF_DIR=$2
+if [[ ! $PROOF_DIR ]]; then 
+    PROOF_DIR="p2t"
+    #PROOF_DIR="proofs/r3unsat_300"
+    #PROOF_DIR="../mallob/proofs/proof#1"
+fi
+
+DRUP=$3
+if [[ ! $DRUP ]]; then
+    DRUP=0
+fi
+
 WORKING_DIR="working"
-NUM_SOLVERS=12                      # Number of proof fragments
-DRUP=0
+NUM_SOLVERS=12
 CONVERT=1
 
 # Calculate comm_size = ceil(sqrt(NUM_SOLVERS))^2
@@ -54,16 +60,16 @@ wait
 # Note comm_size instead of NUM_SOLVERS
 for id in $(seq 0 $((comm_size-1))); do
     # Run each redistribution sequencially, uncomment '&' and 'wait' to run them in parallel
-    build/palrup_redistribute -working-path=$WORKING_DIR -num-solvers=$NUM_SOLVERS -pal-id=$id #&
+    build/palrup_redistribute -working-path=$WORKING_DIR -num-solvers=$NUM_SOLVERS -pal-id=$id &
 done
-#wait
+wait
 
 # Run local checking step for each solver [0, NUM_SOLVERS)
 for id in $(seq 0 $((NUM_SOLVERS-1))); do
     # Run each local confirmation sequencially, uncomment '&' and 'wait' to run them in parallel
-    build/palrup_confirm -palrup-path=$PROOF_DIR -working-path=$WORKING_DIR -num-solvers=$NUM_SOLVERS -pal-id=$id -drup=$DRUP #&
+    build/palrup_confirm -palrup-path=$PROOF_DIR -working-path=$WORKING_DIR -num-solvers=$NUM_SOLVERS -pal-id=$id -drup=$DRUP &
 done
-#wait
+wait
 
 # Validate
 # Count ./check_ok directories and check existence of .unsat_found directory

@@ -1,8 +1,11 @@
 #!/bin/bash
 
-#PROOF_DIR="proofs/r3unsat_300"        # Directory containing proof
-#PROOF_DIR="../mallob/proofs/proof#1"
-PROOF_DIR="p2t"
+PROOF_DIR=$1
+if [[ ! $PROOF_DIR ]]; then 
+    PROOF_DIR="p2t"
+    #PROOF_DIR="proofs/r3unsat_300"
+    #PROOF_DIR="../mallob/proofs/proof#1"
+fi
 #WORKING_DIR="../mallob/proof_working"                 # Directory for PalRUP communication
 WORKING_DIR="trim_working"
 NUM_SOLVERS=12                      # Number of proof fragments
