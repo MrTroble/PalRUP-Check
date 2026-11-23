@@ -420,10 +420,11 @@ static void parse_drup() {
 
         } else if (c == TRUSTED_CHK_CLS_IMPORT) {
             id = (u64)file_reader_read_vbl_sl(proof);
-            if (id < lc_unsat_id) {    // skip clauses that can not be necessary to derive empty clause
-                check_id(id, false);
-                parse_lits();
+            
+            check_id(id, false);
+            parse_lits();
 
+            if (id < lc_unsat_id) {    // skip clauses that can not be necessary to derive empty clause
                 WRITE_IMPORT;
 
                 // forward to checker
@@ -445,7 +446,7 @@ static void parse_drup() {
             lc_stats.nb_deleted++;
 
         } else {
-            LOG_ERR("Invalid directive! c: %d", c);
+            LOG_ERR("Invalid directive! c: %d after line %lu", c, lc_stats.nb_lines_parsed);
             exit(1);
         }
 
