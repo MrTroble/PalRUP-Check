@@ -110,10 +110,13 @@ for instance in instances:
             data_per_job[job][WAITTIME_LOCAL_CHECK].append(0)
             data_per_job[job][WAITTIME_REDISTRIBUTE].append(0)
             data_per_job[job][WAITTIME_CONFIRM].append(0)
-            
 
+df_solving['instance_id'] = df_solving['instance_id'].astype(int)
+df_solving = df_solving.sort_values(by='instance_id')
 df_solving.to_csv(f"{logs_path}/qresults-solve.csv", index=False)
 for job in data_per_job:
     df = pd.DataFrame(data_per_job[job])
+    df['instance_id'] = df['instance_id'].astype(int)
+    df = df.sort_values(by='instance_id')
     df = df.merge(df_solving, on=INSTANCE_ID)
     df.to_csv(f"{logs_path}/qresults-{job}.csv", index=False)
