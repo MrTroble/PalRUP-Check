@@ -4,13 +4,14 @@ log_dir="benchmark_trim_logs"
 log_runtime="$log_dir/results.csv"
 proof_dir_trim="trim_proof"
 mkdir -p "$log_dir"
-echo "formula,runtime_precheck,runtime_trim,runtime_postcheck" > "$log_runtime"
+echo -n "formula,runtime_precheck,runtime_trim,runtime_postcheck" > "$log_runtime"
 
 for formula in formulas/debug/*; do
     formula_name="${formula#formulas/debug/}"
     proof_dir="benchmark_proofs/$formula_name"
     echo "run $formula_name"
-    echo "$formula_name" >> "$log_runtime,"
+    echo >> "$log_runtime"
+    echo -n "$formula_name," >> "$log_runtime"
     
     ## run check on untrimmed proof
     echo -n "    * precheck.. "

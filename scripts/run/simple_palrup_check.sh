@@ -43,10 +43,9 @@ done
 
 # Run local checking step for each solver [0, NUM_SOLVERS)
 for id in $(seq 0 $((NUM_SOLVERS-1))); do
-    #if [[ $id -eq 0 ]]; then id=37; fi
-    #if [[ $id -eq 37 ]]; then id=0; fi
     # Run each local solver sequencially, uncomment '&' and 'wait' to run them in parallel
     if [[ $CONVERT -eq 1 ]]; then
+        #echo "build/palrup_local_check -formula-path=$CNF_PATH -palrup-path=$PROOF_DIR -working-path=$WORKING_DIR -num-solvers=$NUM_SOLVERS -pal-id=$id -drup=$DRUP -convert-to-lrup=$CONVERT &"
         build/palrup_local_check -formula-path=$CNF_PATH -palrup-path=$PROOF_DIR -working-path=$WORKING_DIR -num-solvers=$NUM_SOLVERS -pal-id=$id -drup=$DRUP -convert-to-lrup=$CONVERT &
     else
         build/palrup_local_check_fast_rup -formula-path=$CNF_PATH -palrup-path=$PROOF_DIR -working-path=$WORKING_DIR -num-solvers=$NUM_SOLVERS -pal-id=$id -drup=$DRUP -convert-to-lrup=$CONVERT &
