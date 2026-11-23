@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     // }
     // MPI_Barrier(MPI_COMM_WORLD);
 
-    ProofTrimmer(argv[1], argv[2], 1024 * 1024, 1024 * 1024).trim();
+    ProofTrimmer(argv[1], argv[2], 1024 * 1024 * 1024, 1024 * 1024).trim();
 
     MPI_Finalize();
     return 0;

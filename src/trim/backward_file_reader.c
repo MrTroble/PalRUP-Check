@@ -7,6 +7,7 @@
 #include "../utils/palrup_utils.h"
 
 struct back_file_reader* back_file_reader_init(FILE* file, u64 capacity) {
+    assert(file);
     struct back_file_reader* bfr = (struct back_file_reader*)palrup_utils_malloc(sizeof(struct back_file_reader));
     bfr->file = file;
     fseek(bfr->file, 0, SEEK_END);
@@ -211,9 +212,13 @@ u64 back_file_reader_get_start_line_idx(struct back_file_reader* bfr) {
     if (bfr->read_idx == 0)
         back_file_reader_fill(bfr);
 
+    // TODO: Mark lineendings with 00. The current format is not generally backward readable
+    
+    assert(data[bfr->read_idx] == 0);
     long idx = bfr->read_idx;
     long save_point = idx;
     bool found_short_line = false;
+    bool finished_hints = false;
     while (true) {
         if (idx < 0) {
             long offset = back_file_reader_fill(bfr);
@@ -231,6 +236,7 @@ u64 back_file_reader_get_start_line_idx(struct back_file_reader* bfr) {
         case 0:
             if (found_short_line)   // 0 marks hints in an 'a' line
                 return save_point;
+            finished_hints = true;
             continue;
         case TRUSTED_CHK_CLS_DELETE:
         case TRUSTED_CHK_CLS_IMPORT:
@@ -243,12 +249,12 @@ u64 back_file_reader_get_start_line_idx(struct back_file_reader* bfr) {
                     return 0;   // actual beginning of file
                 }
             }
-            if (data[idx--] != 0)
+            if (data[idx] != 0)
                 continue;
 
             // might be only the hints of an 'a' line
             if (!found_short_line) {
-                save_point = idx + 2;
+                save_point = idx + 1;
                 found_short_line = true;
             } else
                 return save_point;
@@ -263,8 +269,11 @@ u64 back_file_reader_get_start_line_idx(struct back_file_reader* bfr) {
                     return 0;   // actual beginning of file
                 }
             }
-            if (data[idx--] == 0) // found beginning of line
-                return idx + 2;
+            if (data[idx] == 0) {
+                if (found_short_line | finished_hints)   // found beginning of line
+                    return idx + 1;
+                else finished_hints = true;
+            }
             continue;
         default:
             continue;

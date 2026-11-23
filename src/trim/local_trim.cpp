@@ -43,7 +43,9 @@ ProofTrimmer::ProofTrimmer(std::string proof_path, std::string working_path, u64
         out_file = fopen(out_path.c_str(), "wb");
 
         // open proof fragment
-        proof_fragment = back_file_reader_init(fopen(fragment_path.c_str(), "rb"), input_buffer_cap);
+        FILE* fragment = fopen(fragment_path.c_str(), "rb");
+        COND_ERR(!fragment, "Could not open fragment at %s", fragment_path.c_str());
+        proof_fragment = back_file_reader_init(fragment, input_buffer_cap);
         data_pointer = proof_fragment->buffer->data;
 
         //auto someQ = BackImpMerger(calc_input_paths(), input_buffer_cap, queue.rank());
