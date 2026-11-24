@@ -623,8 +623,7 @@ void local_checker_end() {
     int_vec_free(buf_lits);
     u64_vec_free(buf_hints);
     file_reader_end(proof);
-    u8 sig[SIG_SIZE_BYTES];
-    lc_drup ? drup_top_check_end(sig) : lrat_top_check_end();
+    lc_drup ? drup_top_check_end() : lrat_top_check_end();
     siphash_cls_free(clause_hash);
     hash_table_free(import_table);
     lc_unsat_id = (u64)-1;
