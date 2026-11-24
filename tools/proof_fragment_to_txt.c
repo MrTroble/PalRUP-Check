@@ -98,6 +98,7 @@ int main(int argc, char *argv[]) {
                 u64_vec_push(hints_buffer, hint);
                 nb_hints++;
             }
+            printf("nb_hints: %d", nb_hints);
 
             fprintf(output, "\n");
             nb_produced++;
@@ -117,6 +118,7 @@ int main(int argc, char *argv[]) {
                 int_vec_push(lits_buffer, lit);
                 nb_lits++;
             }
+            printf("nb_lits: %d", nb_lits);
 
             fprintf(output, "\n");
             nb_imported++;
