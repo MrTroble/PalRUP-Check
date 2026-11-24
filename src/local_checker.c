@@ -299,6 +299,8 @@ static void parse_lrup() {
             
             id = (u64)file_reader_read_vbl_sl(proof);
             last_produced_id = id;
+            if (last_produced_id >= lc_unsat_id)    // parsing is done
+                continue;
             siphash_cls_update(clause_hash, (u8*)&id, sizeof(u64));
 
             check_id(id, true);
@@ -334,6 +336,7 @@ static void parse_lrup() {
 
         } else if (c == TRUSTED_CHK_CLS_IMPORT) {
             id = (u64)file_reader_read_vbl_sl(proof);
+
             check_id(id, false);
             parse_lits();
 
@@ -401,6 +404,9 @@ static void parse_drup() {
         } else if (c == TRUSTED_CHK_CLS_PRODUCE) {
             id = (u64)file_reader_read_vbl_sl(proof);
             last_produced_id = id;
+            if (last_produced_id >= lc_unsat_id)    // parsing is done
+                continue;
+            
             siphash_cls_update(clause_hash, (u8*)&id, sizeof(u64));
             check_id(id, true);
             parse_lits();
