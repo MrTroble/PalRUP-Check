@@ -511,6 +511,10 @@ void local_checker_init(struct options* options) {
                  options->palrup_path, dir_hierarchy, options->pal_id, LRUP_FRAGMENT_NAME);
         LOG("print extended proof fragment to %s", lrup_file_path);
         lrup_file = fopen(lrup_file_path, "wb");
+        if (!lrup_file) {
+            LOG_ERR("Could not open file at %s", lrup_file_path);
+            abort();
+        }
     } else {
         lrup_file_path = NULL;
         lrup_file = NULL;

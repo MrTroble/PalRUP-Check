@@ -17,9 +17,13 @@ static void resize_data(struct merge_buffer* buffer) {
 
 struct merge_buffer* merge_buffer_init(u64 capacity, char* file_name) {
     struct merge_buffer* buffer = (struct merge_buffer*)palrup_utils_malloc(sizeof(struct merge_buffer));
-    if (file_name)
+    if (file_name) {
         buffer->file = fopen(file_name, "rb");
-    else
+        if (!buffer->file) {
+            LOG_ERR("Could not open file at %s", file_name);
+            abort();
+        }
+    } else
         buffer->file = NULL;
     buffer->capacity = capacity;
     buffer->size = 0;
