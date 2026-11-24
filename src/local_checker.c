@@ -334,9 +334,10 @@ static void parse_lrup() {
 
         } else if (c == TRUSTED_CHK_CLS_IMPORT) {
             id = (u64)file_reader_read_vbl_sl(proof);
+            check_id(id, false);
+            parse_lits();
+
             if (id < lc_unsat_id) {    // skip clauses that can not be necessary to derive empty clause
-                check_id(id, false);
-                parse_lits();
 
                 // forward to checker
                 buf_lits->size = checker_utils_remove_duplicates(buf_lits->data, buf_lits->size);
